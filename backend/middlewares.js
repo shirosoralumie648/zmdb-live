@@ -1,7 +1,4 @@
-import config from "./config.js";
 import error from "./error.js";
-import AuthApi from './api/AuthApi.js';
-
 
 export async function errorHandler(ctx, next) {
     try {
@@ -25,24 +22,16 @@ export async function errorHandler(ctx, next) {
     }
 }
 
-// 新的用户验证函数，可以进行远程调用和透传，目前暂未实现
-// export async function auth(ctx, next) {
-//     const token = ctx.header.authorization;
-//     ctx.logger.info(token);
-//     const auth = await AuthApi.auth(token);
-//     ctx.logger.info(auth);
-//     await next();
-// }
-
 export async function auth(ctx, next) {
     const token = ctx.header.authorization;
-    config.zimu.auths.forEach(auth => {
-        if (`Bearer ${auth.secretKey}` === token) {
-            ctx.state.auth = auth;
-        }
-    });
-    if (!ctx.state.auth) {
+    if (!token || !token.startsWith('Bearer ')) {
         throw error.auth.Unauthorized;
     }
+    const pureToken = token.replace('Bearer ', '');
+    const user = ctx.userDao.findByToken(pureToken);
+    if (!user) {
+        throw error.auth.Unauthorized;
+    }
+    ctx.state.user = user;
     await next();
 }

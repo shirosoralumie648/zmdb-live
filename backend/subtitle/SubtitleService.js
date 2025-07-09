@@ -75,7 +75,7 @@ export default class SubtitleService {
             throw error.author.NotFound;
         }
 
-        if (ctx.state.auth.organizationId !== 0 && ctx.state.auth.organizationId !== author.organizationId) {
+        if (!ctx.userService.isAdmin(ctx.state.user)) {
             throw error.auth.Unauthorized;
         }
 

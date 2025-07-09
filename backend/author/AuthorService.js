@@ -10,6 +10,10 @@ export default class AuthorService {
      * @param {avatar} 作者B站头像地址
      */
     insert = async (ctx) => {
+        // 只有admin才可插入
+        if (!ctx.userService.isAdmin(ctx.state.user)) {
+            throw error.auth.Unauthorized;
+        }
         const entity = ctx.request.body;
         let author = {};
         // 检查参数合法性
@@ -49,6 +53,10 @@ export default class AuthorService {
      * @param {avatar} 作者B站头像地址
      */
     update = async (ctx) => {
+        // 只有admin才可更新
+        if (!ctx.userService.isAdmin(ctx.state.user)) {
+            throw error.auth.Unauthorized;
+        }
         const id = parseInt(ctx.params.id);
         const entity = ctx.request.body;
         // 检查参数合法性
@@ -93,7 +101,7 @@ export default class AuthorService {
     deleteById = async (ctx) => {
         const id = entity.id;
         const author = ctx.authorDao.findById(id);
-        if (ctx.state.auth.organizationId !== 0 && ctx.state.auth.organizationId !== author.organizationId) {
+        if (!ctx.userService.isAdmin(ctx.state.user)) {
             throw error.auth.Unauthorized;
         }
         ctx.authorDao.deleteById(id);

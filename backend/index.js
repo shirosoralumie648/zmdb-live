@@ -16,6 +16,8 @@ import AuthorService from './author/AuthorService.js';
 import ClipService from './clip/ClipService.js';
 import SubtitleService from './subtitle/SubtitleService.js';
 import NotificationService from './notification/NotificationService.js';
+import UserDao from './user/UserDao.js';
+import UserService from './user/UserService.js';
 
 const app = new Koa({ proxy: true });
 const router = new Router();
@@ -28,6 +30,7 @@ db.function('REGEXP', { deterministic: true }, (regex, text) => {
 });
 
 app.context.organizationDao = new OrganizationDao(db);
+app.context.userDao = new UserDao(db);
 app.context.authorDao = new AuthorDao(db);
 app.context.clipDao = new ClipDao(db);
 app.context.subtitleDao = new SubtitleDao(db);
@@ -37,6 +40,21 @@ app.context.authorService = new AuthorService();
 app.context.clipService = new ClipService();
 app.context.subtitleService = new SubtitleService();
 app.context.notificationService = new NotificationService();
+app.context.userService = new UserService();
+
+/**
+ * user
+ */
+router.post('/auth/login', async ctx => {
+    ctx.body = await ctx.userService.login(ctx);
+});
+router.post('/auth/insert', auth, async ctx => {
+    ctx.body = await ctx.userService.insert(ctx);
+});
+router.put('/auth/:role', auth, async ctx => {
+    ctx.body = await ctx.userService.update(ctx);
+});
+
 
 /**
  * notification

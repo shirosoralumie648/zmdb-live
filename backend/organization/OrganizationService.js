@@ -10,7 +10,7 @@ export default class OrganzationService {
      * @returns 
      */
     insert = async (ctx) => {
-        if (ctx.state.auth.organizationId !== 0) {
+        if (!ctx.userService.isAdmin(ctx.state.user)) {
             throw error.auth.Unauthorized;
         }
         const entity = ctx.request.body;
@@ -48,7 +48,7 @@ export default class OrganzationService {
      * @returns 
      */
     update = async (ctx) => {
-        if (ctx.state.auth.organizationId !== 0) {
+        if (!ctx.userService.isAdmin(ctx.state.user)) {
             throw error.auth.Unauthorized;
         }
         const id = parseInt(ctx.params.id);
@@ -85,7 +85,7 @@ export default class OrganzationService {
     }
 
     deleteById = async (ctx) => {
-        if (ctx.state.auth.organizationId !== 0) {
+        if (!ctx.userService.isAdmin(ctx.state.user)) {
             throw error.auth.Unauthorized;
         }
         const id = ctx.params.id;

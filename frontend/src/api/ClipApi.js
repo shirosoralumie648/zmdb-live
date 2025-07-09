@@ -9,7 +9,12 @@ export default class ClipApi {
             params.append('keyword', keyword);
             url = `${url}?${params.toString()}`;
         }
-        const res = await fetch(url);
+        const token = localStorage.getItem('token');
+        const res = await fetch(url, {
+            headers: {
+                'Authorization': token ? `Bearer ${token}` : ''
+            }
+        });
         const json = await res.json();
         if (!res.ok) {
             throw json;

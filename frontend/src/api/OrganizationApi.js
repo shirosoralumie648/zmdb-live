@@ -2,11 +2,12 @@ import config from '../config';
 
 export default class OrganizationsApi {
 
-    static findAll = async (token) => {
+    static findAll = async () => {
         const url = `${config.url.api}/organizations`;
+        const token = localStorage.getItem('token');
         const res = await fetch(url, {
             headers: {
-                'Authorization': `Bearer ${token}`
+                'Authorization': token ? `Bearer ${token}` : ''
             }
         });
         const json = await res.json();

@@ -8,15 +8,17 @@ import reportWebVitals from './reportWebVitals';
 
 const root = ReactDOM.createRoot(document.getElementById('root'));
 
+import { Login } from './Login';
+
 root.render(
     <React.Fragment>
         <CssBaseline />
         <BrowserRouter forceRefresh={true} >
             <Routes>
+                <Route path='/login' element={<Login />} />
                 <Route path='/' element={<App />}>
-                    <Route path='/' element={<Home />}>
-                        <Route path='/organizations/:organizationId' element={<Home />} />
-                    </Route>
+                    <Route index element={<Home />} />
+                    <Route path='/organizations/:organizationId' element={<Home />} />
                 </Route>
             </Routes>
         </BrowserRouter>
