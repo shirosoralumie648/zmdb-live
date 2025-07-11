@@ -111,5 +111,11 @@ package-lock.json
 config.js
 backend/tmp/
 backend/static/
+backend/yarn.lock
 frontend/build/
 frontend/yarn.lock
+
+# Local live & record files
+records/1/雪糕cheese
+
+

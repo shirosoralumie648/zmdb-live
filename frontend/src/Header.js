@@ -20,7 +20,7 @@ export const Header = () => {
             <AppBar position='fixed' sx={{ zIndex: (theme) => theme.zIndex.drawer + 1 }}>
                 <Toolbar>
                     <Typography variant="h6" component="div" sx={{ flexGrow: 1 }}>
-                        <Link component={RouterLink} color='inherit' underline='none' to='/' sx={{ fontSize: '1.2em' }}>ZIMU.LIVE</Link>
+                        <Link component={RouterLink} color='inherit' underline='none' to='/' sx={{ fontSize: '1.2em' }}>字幕库</Link>
                         <span style={{ marginLeft:'0.5em', fontSize:'0.7em' }}>斯莱版</span>
                     </Typography>
                     <Typography variant="subtitle1" color='#EDAAB3' sx={{ flexGrow: 1 }}>

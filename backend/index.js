@@ -18,6 +18,13 @@ import SubtitleService from './subtitle/SubtitleService.js';
 import NotificationService from './notification/NotificationService.js';
 import UserDao from './user/UserDao.js';
 import UserService from './user/UserService.js';
+import mount from 'koa-mount';
+import serve from 'koa-static';
+import { fileURLToPath } from 'url';
+import { dirname, join } from 'path';
+
+const __filename = fileURLToPath(import.meta.url);
+const __dirname = dirname(__filename);
 
 const app = new Koa({ proxy: true });
 const router = new Router();
@@ -177,5 +184,8 @@ app.use(logger((str, args) => {
 app.use(cors());
 app.use(errorHandler);
 app.use(router.routes());
+app.use(mount('/records', serve(join(__dirname, '../records'))));
+app.use(mount('/records', serve(join(__dirname, '../records'))));
+app.use(mount('/clip/segment', serve(join(__dirname, '../clip/segment'))));
 
 app.listen(config.web.port);

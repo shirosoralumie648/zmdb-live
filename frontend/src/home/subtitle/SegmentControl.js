@@ -32,31 +32,25 @@ export const SegmentControl = ({clip, startTime, setStartTime, endTime, setEndTi
             if (!json.filename || json.filename === '') {
                 throw {code: 20000, message: '切片失败'};
             }
-            let url = `${config.static.url}/segments/${json.filename}`;
+            let url = `${config.static.url}/segment/${json.filename}`;
             
             setTimeout(async () => {
-                if (segmentName && segmentName.length > 0) {
-                    let x = new XMLHttpRequest();
-                    x.open('GET', url, true);
-                    x.responseType = 'blob';
-                    x.onload = (e) => {
-                        const burl = window.URL.createObjectURL(x.response);
-                        let a = document.createElement("a");
-                        a.href = burl;
-                        a.download = `${segmentName}.${json.filename.split('.').pop()}`;
-                        console.log(`begin:${burl},${a.download}`);
-                        a.click();
-                        console.log(`end:${burl}`);
-                        a.remove();
-                    }
-                    x.send();
-                } else {
+                let x = new XMLHttpRequest();
+                x.open('GET', url, true);
+                x.responseType = 'blob';
+                x.onload = (e) => {
+                    const burl = window.URL.createObjectURL(x.response);
                     let a = document.createElement("a");
-                    a.download = json.filename;
-                    a.href = url;
+                    a.href = burl;
+                    a.download = segmentName && segmentName.length > 0
+                                ? `${segmentName}.${json.filename.split('.').pop()}`
+                                : json.filename; // 如果segmentName不为空，则使用segmentName作为下载文件名
+                    console.log(`begin:${burl},${a.download}`);
                     a.click();
+                    console.log(`end:${burl}`);
                     a.remove();
                 }
+                x.send();
             }, 1000);
         } catch (ex) {
             console.log(ex);

@@ -115,9 +115,8 @@ export default class SegmentService {
             return {filename};
         } else if (clip.type === 3) {
             // 本地源
-            let a = clip.playUrl.split('/');
-            a[0] = config.segment.recordRoot;
-            const src = a.join('/');
+            // 将 playUrl 转换为相对路径 ./records/1/111.mp4
+            const src = '..' + clip.playUrl.replace(/^\/\/[^/]+/, '');
             ctx.logger.info(`src:${src}`);
 
             if (audio === 'true') {
