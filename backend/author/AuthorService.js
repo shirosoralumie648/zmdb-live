@@ -64,9 +64,6 @@ export default class AuthorService {
         if (!author) {
             throw error.author.NotFound;
         }
-        if (ctx.state.auth.organizationId !== 0 && ctx.state.auth.organizationId !== author.organizationId) {
-            throw error.auth.Unauthorized;
-        }
         if (entity.hasOwnProperty('organizationId')) {
             const organizationId = entity.organizationId;
             if (!ctx.organizationDao.findById(organizationId)) {

@@ -24,6 +24,7 @@
     - **后端**：`koa` 实现
     - **前端**：`react-scripts` 实现
     - **剪辑**：需要 `ffmpeg` 支持
+    - **录播**：需要 [录播姬](https://github.com/BililiveRecorder/BililiveRecorder) 支持
 
 > 请确保已安装以上程序.
 

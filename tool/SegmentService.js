@@ -115,7 +115,7 @@ export default class SegmentService {
             return {filename};
         } else if (clip.type === 3) {
             // 本地源
-            // 将 playUrl 转换为相对路径 ./records/1/111.mp4
+            // 将 playUrl 转换为相对路径
             const src = '..' + clip.playUrl.replace(/^\/\/[^/]+/, '');
             ctx.logger.info(`src:${src}`);
 
@@ -130,9 +130,7 @@ export default class SegmentService {
             return {filename};
         } else if (clip.type === 4 || clip.type === 5) {
             // 本地直播和已下播
-            let a = clip.playUrl.split('/');
-            a[0] = config.segment.liveRoot;
-            const src = a.join('/');
+            const src = '..' + clip.playUrl.replace(/^\/\/[^/]+/, '');
             ctx.logger.info(`src:${src}`);
 
             if (audio === 'true') {

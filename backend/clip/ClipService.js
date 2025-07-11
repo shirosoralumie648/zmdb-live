@@ -84,12 +84,12 @@ export default class ClipService {
         } else {
             if (entity.type === 2 || entity.type === 3) {
                 clip.type = entity.type;
-                clip.playUrl = `${config.zimu.local.url}/${author.organizationId}/${author.name}/${title}.mp4`;
+                clip.playUrl = `${config.zimu.local.url}/${author.name}/${title}.mp4`;
                 clip.redirectUrl = '';
             } else if (entity.type === 4) {
                 // TODO
                 clip.type = entity.type;
-                clip.playUrl = `${config.zimu.live.url}/${author.organizationId}/${author.name}/${title}.flv`;
+                clip.playUrl = `${config.zimu.live.url}/${author.name}/${title}.flv`;
                 clip.redirectUrl = '';
             } else {
                 clip.type = 0; // 未知来源
@@ -324,10 +324,10 @@ export default class ClipService {
 
     __parseUrl = (clip) => {
         if (clip.type === 3) {
-            clip.playUrl = `${config.zimu.local.url}/${clip.author.organizationId}/${clip.author.name}/${clip.title}.mp4`;
+            clip.playUrl = `${config.zimu.local.url}/${clip.author.name}/${clip.title}.mp4`;
             clip.redirectUrl = '';
         } else if (clip.type === 4 || clip.type === 5) {
-            clip.playUrl = `${config.zimu.live.url}/${clip.author.organizationId}/${clip.author.name}/${clip.title}.flv`;
+            clip.playUrl = `${config.zimu.live.url}/${clip.author.name}/${clip.title}.flv`;
             clip.redirectUrl = '';
         }
         return clip;
