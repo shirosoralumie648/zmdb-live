@@ -1,5 +1,6 @@
 import * as React from 'react';
 import { useParams } from 'react-router-dom';
+import { useNavigate, useLocation } from 'react-router-dom';
 import { Box } from '@mui/material';
 import { MainPanel } from './MainPanel';
 import { Sidebar } from './Sidebar';
@@ -19,6 +20,8 @@ export const Home = () => {
     const [segmentDisabled, setSegmentDisabled] = React.useState(false);
 
     const { setLoading, onMessage } = React.useContext(globalContext);
+    const navigate = useNavigate();
+    const location = useLocation();
 
     const params = useParams();
 
@@ -68,9 +71,32 @@ export const Home = () => {
     }
 
     React.useEffect(() => {
+        const token = localStorage.getItem('token');
+        // 如果没有token且不是在登录页，跳转到登录
+        if (!token && location.pathname !== '/login') {
+            navigate('/login');
+        }
+    }, [location, navigate]);
+
+    React.useEffect(() => {
         (async () => {
-            const json = await OrganizationsApi.findAll();
-            setOrganizations(json || []);
+            try {
+                const json = await OrganizationsApi.findAll();
+                setOrganizations(json || []);
+            } catch (ex) {
+                console.log(ex);
+                if (ex) {
+                    onMessage({
+                        type: 'error',
+                        content: `${ex.code}:${ex.message}`
+                    });
+                } else {
+                    onMessage({
+                        type: 'error',
+                        content: '内部错误'
+                    });
+                }
+            }
         })();
     }, []);
 

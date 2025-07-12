@@ -116,9 +116,6 @@ frontend/build/
 frontend/yarn.lock
 
 # Local live & record files
-/records/
-!/records/雪糕cheese/三天上赋能.mp4
-/lives/
-!/lives/雪糕cheese/20250712-001418-523-三天上赋能.xml
+雪糕cheese/
 
 

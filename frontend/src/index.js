@@ -5,10 +5,9 @@ import CssBaseline from '@mui/material/CssBaseline';
 import { App } from './App';
 import { Home } from './home/Home';
 import reportWebVitals from './reportWebVitals';
+import { Login } from './Login';
 
 const root = ReactDOM.createRoot(document.getElementById('root'));
-
-import { Login } from './Login';
 
 root.render(
     <React.Fragment>

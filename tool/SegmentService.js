@@ -115,8 +115,9 @@ export default class SegmentService {
             return {filename};
         } else if (clip.type === 3) {
             // 本地源
-            // 将 playUrl 转换为相对路径
-            const src = '..' + clip.playUrl.replace(/^\/\/[^/]+/, '');
+            let a = clip.playUrl.split('/');
+            a[0] = config.zimu.url;
+            const src = a.join('/');
             ctx.logger.info(`src:${src}`);
 
             if (audio === 'true') {
@@ -130,7 +131,9 @@ export default class SegmentService {
             return {filename};
         } else if (clip.type === 4 || clip.type === 5) {
             // 本地直播和已下播
-            const src = '..' + clip.playUrl.replace(/^\/\/[^/]+/, '');
+            let a = clip.playUrl.split('/');
+            a[0] = config.zimu.url;
+            const src = a.join('/');
             ctx.logger.info(`src:${src}`);
 
             if (audio === 'true') {
