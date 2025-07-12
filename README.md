@@ -55,6 +55,7 @@ npm run build
 - **直播处理相关**: 在 `tool/` 目录下新建 `config.js`，内容参考 `config.js.tpl` 或 `config.tpl.js`
 
 > 默认前端端口号 3000，后端端口号 4000，工具端口号 5000.
+> 本项目提供了 `frontend/src/setProxy.js` 在开发模式下对后端/工具端口进行了反向代理
 
 ### 后端服务启动
 
@@ -72,7 +73,13 @@ npm start
 
 ### 前端网页启动
 
+- 开发模式测试
+
 ```bash
 cd frontend
 npm start
 ```
+
+- 使用 Nginx 启动 （推荐）
+
+使用本项目根目录下的 `nginx.conf` 替换
