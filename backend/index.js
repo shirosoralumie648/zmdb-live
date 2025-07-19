@@ -110,6 +110,9 @@ router.get('/authors', async ctx => {
 router.get('/organizations/:organizationId/authors', async ctx => {
     ctx.body = await ctx.authorService.findByOrganizationId(ctx);
 });
+router.delete('/authors/:id', auth, async ctx => {
+    ctx.body = await ctx.authorService.deleteById(ctx);
+});
 
 
 /**

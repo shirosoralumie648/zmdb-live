@@ -7,6 +7,8 @@ import { Home } from './home/Home';
 import { Settings } from './Settings';
 import { AdminPanel } from './admin/AdminPanel';
 import { OrganizationManagement } from './admin/OrganizationManagement';
+import { AuthorManagement } from './admin/AuthorManagement';
+import { SubtitleEditor } from './admin/SubtitleEditor';
 import reportWebVitals from './reportWebVitals';
 import { Login } from './Login';
 
@@ -24,6 +26,8 @@ root.render(
                     <Route path='/settings' element={<Settings />} />
                     <Route path='/admin' element={<AdminPanel />} />
                     <Route path='/admin/organizations' element={<OrganizationManagement />} />
+                    <Route path='/admin/authors' element={<AuthorManagement />} />
+                    <Route path='/admin/subtitles' element={<SubtitleEditor />} />
                 </Route>
             </Routes>
         </BrowserRouter>

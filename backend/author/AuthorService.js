@@ -96,13 +96,17 @@ export default class AuthorService {
     }
 
     deleteById = async (ctx) => {
-        const id = entity.id;
-        const author = ctx.authorDao.findById(id);
         if (!ctx.userService.isAdmin(ctx.state.user)) {
             throw error.auth.Unauthorized;
         }
+        const id = parseInt(ctx.params.id);
+        const author = ctx.authorDao.findById(id);
+        if (!author) {
+            throw error.author.NotFound;
+        }
         ctx.authorDao.deleteById(id);
-        ctx.logger.info(`删除author:${author}`);
+        ctx.logger.info(`删除author:${JSON.stringify(author)}`);
+        return { success: true };
     }
 
     findById = (ctx) => {
