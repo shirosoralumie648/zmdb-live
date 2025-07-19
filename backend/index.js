@@ -88,6 +88,9 @@ router.put('/organizations/:id', auth, async ctx => {
 router.get('/organizations', auth, async ctx => {
     ctx.body = await ctx.organizationService.findAll(ctx) || [];
 });
+router.delete('/organizations/:id', auth, async ctx => {
+    ctx.body = await ctx.organizationService.deleteById(ctx);
+});
 
 /**
  * authors

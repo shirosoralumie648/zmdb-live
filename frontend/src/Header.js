@@ -1,17 +1,18 @@
 import * as React from 'react';
 import { Link as RouterLink, useNavigate } from 'react-router-dom';
-import { 
-    AppBar, 
-    Link, 
-    Toolbar, 
-    Typography, 
+import {
+    AppBar,
+    Link,
+    Toolbar,
+    Typography,
     Box,
     IconButton,
     Menu,
     MenuItem,
     Avatar,
     Chip,
-    Badge
+    Badge,
+    Divider
 } from '@mui/material';
 import {
     AccountCircle,
@@ -19,7 +20,8 @@ import {
     Settings,
     Notifications,
     Home,
-    VideoLibrary
+    VideoLibrary,
+    AdminPanelSettings
 } from '@mui/icons-material';
 import NotificationsApi from './api/NotificationsApi';
 
@@ -49,6 +51,11 @@ export const Header = () => {
     
     const handleSettings = () => {
         navigate('/settings');
+        handleMenuClose();
+    };
+    
+    const handleAdmin = () => {
+        navigate('/admin');
         handleMenuClose();
     };
 
@@ -173,6 +180,11 @@ export const Header = () => {
                                         <Settings sx={{ mr: 1 }} />
                                         设置
                                     </MenuItem>
+                                    <MenuItem onClick={handleAdmin}>
+                                        <AdminPanelSettings sx={{ mr: 1 }} />
+                                        管理员面板
+                                    </MenuItem>
+                                    <Divider />
                                     <MenuItem onClick={handleLogout}>
                                         <Logout sx={{ mr: 1 }} />
                                         退出登录

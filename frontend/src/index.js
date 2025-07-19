@@ -22,6 +22,8 @@ root.render(
                     <Route index element={<Home />} />
                     <Route path='/organizations/:organizationId' element={<Home />} />
                     <Route path='/settings' element={<Settings />} />
+                    <Route path='/admin' element={<AdminPanel />} />
+                    <Route path='/admin/organizations' element={<OrganizationManagement />} />
                 </Route>
             </Routes>
         </BrowserRouter>
