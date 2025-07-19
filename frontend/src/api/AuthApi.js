@@ -16,4 +16,20 @@ export default class AuthApi {
         }
         return json;
     }
+
+    static register = async (username, password, email = '') => {
+        const url = `${config.url.api}/auth/register`;
+        const res = await fetch(url, {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json'
+            },
+            body: JSON.stringify({ username, password, email })
+        });
+        const json = await res.json();
+        if (!res.ok) {
+            throw json;
+        }
+        return json;
+    }
 }

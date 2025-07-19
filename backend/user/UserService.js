@@ -69,6 +69,60 @@ export default class UserService {
         return { token };
     }
 
+    /**
+     * 用户注册
+     * @param {username}  用户名
+     * @param {password}  密码
+     * @param {email}     邮箱（可选）
+     * @returns 
+     */
+    register = async (ctx) => {
+        const { username, password, email } = ctx.request.body;
+        
+        // 验证输入
+        if (!username || !password) {
+            throw { code: 400, message: '用户名和密码不能为空' };
+        }
+        
+        if (username.length < 3) {
+            throw { code: 400, message: '用户名至少需要3个字符' };
+        }
+        
+        if (password.length < 6) {
+            throw { code: 400, message: '密码至少需要6个字符' };
+        }
+        
+        // 检查用户名是否已存在
+        let existingUser = ctx.userDao.findByUsername(username);
+        if (existingUser) {
+            throw { code: 409, message: '用户名已存在' };
+        }
+        
+        // 创建新用户
+        const token = crypto.randomBytes(32).toString('hex');
+        const userData = {
+            username,
+            password,
+            token,
+            role: 'user', // 新注册用户默认为普通用户
+            email: email || null
+        };
+        
+        try {
+            ctx.userDao.insert(userData);
+            ctx.logger.info(`新用户注册成功: ${username}`);
+            return { 
+                token,
+                username,
+                role: 'user',
+                message: '注册成功'
+            };
+        } catch (error) {
+            ctx.logger.error(`用户注册失败: ${error.message}`);
+            throw { code: 500, message: '注册失败，请稍后重试' };
+        }
+    }
+
     isAdmin = (user) => {
         return user && user.role === 'admin';
     }

@@ -55,6 +55,9 @@ app.context.userService = new UserService();
 router.post('/auth/login', async ctx => {
     ctx.body = await ctx.userService.login(ctx);
 });
+router.post('/auth/register', async ctx => {
+    ctx.body = await ctx.userService.register(ctx);
+});
 router.post('/auth/insert', auth, async ctx => {
     ctx.body = await ctx.userService.insert(ctx);
 });

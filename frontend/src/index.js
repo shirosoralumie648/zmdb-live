@@ -4,6 +4,9 @@ import { BrowserRouter, Route, Routes } from 'react-router-dom';
 import CssBaseline from '@mui/material/CssBaseline';
 import { App } from './App';
 import { Home } from './home/Home';
+import { Settings } from './Settings';
+import { AdminPanel } from './admin/AdminPanel';
+import { OrganizationManagement } from './admin/OrganizationManagement';
 import reportWebVitals from './reportWebVitals';
 import { Login } from './Login';
 
@@ -18,6 +21,7 @@ root.render(
                 <Route path='/' element={<App />}>
                     <Route index element={<Home />} />
                     <Route path='/organizations/:organizationId' element={<Home />} />
+                    <Route path='/settings' element={<Settings />} />
                 </Route>
             </Routes>
         </BrowserRouter>
