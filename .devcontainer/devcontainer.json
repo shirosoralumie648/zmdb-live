@@ -59,11 +59,11 @@
   ],
 
   // 用户设置
-  "remoteUser": "root",
+  "remoteUser": "root"
   
-  // 功能配置
-  "features": {
-    "ghcr.io/devcontainers/features/git:1": {},
-    "ghcr.io/devcontainers/features/github-cli:1": {}
-  }
+  // 功能配置 - 简化版，避免网络问题
+  // "features": {
+  //   "ghcr.io/devcontainers/features/git:1": {},
+  //   "ghcr.io/devcontainers/features/github-cli:1": {}
+  // }
 }
