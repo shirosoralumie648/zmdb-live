@@ -9,6 +9,7 @@ import { AdminPanel } from './admin/AdminPanel';
 import { OrganizationManagement } from './admin/OrganizationManagement';
 import { AuthorManagement } from './admin/AuthorManagement';
 import { SubtitleEditor } from './admin/SubtitleEditor';
+import { ClipManagement } from './admin/ClipManagement';
 import reportWebVitals from './reportWebVitals';
 import { Login } from './Login';
 
@@ -28,6 +29,7 @@ root.render(
                     <Route path='/admin/organizations' element={<OrganizationManagement />} />
                     <Route path='/admin/authors' element={<AuthorManagement />} />
                     <Route path='/admin/subtitles' element={<SubtitleEditor />} />
+                    <Route path='/admin/clips' element={<ClipManagement />} />
                 </Route>
             </Routes>
         </BrowserRouter>
