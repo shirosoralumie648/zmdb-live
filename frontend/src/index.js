@@ -11,6 +11,7 @@ import { AuthorManagement } from './admin/AuthorManagement';
 import { SubtitleEditor } from './admin/SubtitleEditor';
 import { ClipManagement } from './admin/ClipManagement';
 import { SystemSettings } from './admin/SystemSettings';
+import { DataAnalytics } from './admin/DataAnalytics';
 import reportWebVitals from './reportWebVitals';
 import { Login } from './Login';
 
@@ -32,6 +33,7 @@ root.render(
                     <Route path='/admin/subtitles' element={<SubtitleEditor />} />
                     <Route path='/admin/clips' element={<ClipManagement />} />
                     <Route path='/admin/system' element={<SystemSettings />} />
+                    <Route path='/admin/analytics' element={<DataAnalytics />} />
                 </Route>
             </Routes>
         </BrowserRouter>
