@@ -1,0 +1,46 @@
+version: '3.8'
+
+services:
+  zmdb-app:
+    build: .
+    container_name: zmdb-live
+    ports:
+      - "80:80"       # Nginx
+      - "3000:3000"   # Frontend dev server
+      - "4000:4000"   # Backend API
+      - "5000:5000"   # Tool service
+    volumes:
+      # 挂载源代码以支持开发模式
+      - ./backend:/app/backend
+      - ./frontend:/app/frontend
+      - ./tool:/app/tool
+      # 持久化数据目录
+      - ./records:/app/records
+      - ./lives:/app/lives
+      - ./clip:/app/clip
+      # 数据库文件
+      - zmdb_data:/app/data
+    environment:
+      - NODE_ENV=development
+      - PORT=4000
+      - TOOL_PORT=5000
+      - FRONTEND_PORT=3000
+    restart: unless-stopped
+    networks:
+      - zmdb-network
+
+  # 可选：单独的数据库服务（如果需要）
+  # sqlite-db:
+  #   image: alpine:latest
+  #   container_name: zmdb-sqlite
+  #   volumes:
+  #     - zmdb_data:/data
+  #   command: tail -f /dev/null
+
+volumes:
+  zmdb_data:
+    driver: local
+
+networks:
+  zmdb-network:
+    driver: bridge

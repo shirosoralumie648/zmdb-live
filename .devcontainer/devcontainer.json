@@ -1,0 +1,69 @@
+{
+  "name": "ZMDB Live Development",
+  "dockerComposeFile": "../docker-compose.yml",
+  "service": "zmdb-app",
+  "workspaceFolder": "/app",
+  
+  // 配置 VSCode 设置
+  "customizations": {
+    "vscode": {
+      "extensions": [
+        "ms-vscode.vscode-node-azure-pack",
+        "bradlc.vscode-tailwindcss",
+        "esbenp.prettier-vscode",
+        "ms-vscode.vscode-json",
+        "ms-vscode.vscode-typescript-next",
+        "formulahendry.auto-rename-tag",
+        "christian-kohler.path-intellisense",
+        "ms-vscode.vscode-eslint"
+      ],
+      "settings": {
+        "terminal.integrated.defaultProfile.linux": "bash",
+        "editor.formatOnSave": true,
+        "editor.defaultFormatter": "esbenp.prettier-vscode",
+        "files.associations": {
+          "*.js": "javascript",
+          "*.jsx": "javascriptreact"
+        }
+      }
+    }
+  },
+
+  // 端口转发
+  "forwardPorts": [3000, 4000, 5000, 80],
+  "portsAttributes": {
+    "3000": {
+      "label": "Frontend Dev Server",
+      "onAutoForward": "notify"
+    },
+    "4000": {
+      "label": "Backend API",
+      "onAutoForward": "notify"
+    },
+    "5000": {
+      "label": "Tool Service",
+      "onAutoForward": "notify"
+    },
+    "80": {
+      "label": "Nginx Proxy",
+      "onAutoForward": "notify"
+    }
+  },
+
+  // 容器启动后执行的命令
+  "postCreateCommand": "echo 'ZMDB Live 开发环境已准备就绪！'",
+
+  // 挂载 Docker socket 以支持 Docker 操作
+  "mounts": [
+    "source=/var/run/docker.sock,target=/var/run/docker.sock,type=bind"
+  ],
+
+  // 用户设置
+  "remoteUser": "root",
+  
+  // 功能配置
+  "features": {
+    "ghcr.io/devcontainers/features/git:1": {},
+    "ghcr.io/devcontainers/features/github-cli:1": {}
+  }
+}
