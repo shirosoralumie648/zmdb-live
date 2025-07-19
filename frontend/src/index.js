@@ -10,6 +10,7 @@ import { OrganizationManagement } from './admin/OrganizationManagement';
 import { AuthorManagement } from './admin/AuthorManagement';
 import { SubtitleEditor } from './admin/SubtitleEditor';
 import { ClipManagement } from './admin/ClipManagement';
+import { SystemSettings } from './admin/SystemSettings';
 import reportWebVitals from './reportWebVitals';
 import { Login } from './Login';
 
@@ -30,6 +31,7 @@ root.render(
                     <Route path='/admin/authors' element={<AuthorManagement />} />
                     <Route path='/admin/subtitles' element={<SubtitleEditor />} />
                     <Route path='/admin/clips' element={<ClipManagement />} />
+                    <Route path='/admin/system' element={<SystemSettings />} />
                 </Route>
             </Routes>
         </BrowserRouter>
