@@ -44,7 +44,8 @@ export const OrganizationManagement = () => {
     const [formData, setFormData] = React.useState({
         name: '',
         avatar: '',
-        description: ''
+        description: '',
+        sort: 0
     });
     const [success, setSuccess] = React.useState('');
     const [error, setError] = React.useState('');
@@ -75,7 +76,8 @@ export const OrganizationManagement = () => {
         setFormData({
             name: org?.name || '',
             avatar: org?.avatar || '',
-            description: org?.description || ''
+            description: org?.description || '',
+            sort: org?.sort || (organizations.length > 0 ? Math.max(...organizations.map(o => o.sort || 0)) + 1 : 1)
         });
         setOpenDialog(true);
     };
@@ -83,7 +85,7 @@ export const OrganizationManagement = () => {
     const handleCloseDialog = () => {
         setOpenDialog(false);
         setEditingOrg(null);
-        setFormData({ name: '', avatar: '', description: '' });
+        setFormData({ name: '', avatar: '', description: '', sort: 0 });
     };
 
     const handleSave = async () => {
@@ -179,6 +181,7 @@ export const OrganizationManagement = () => {
                         <TableRow sx={{ backgroundColor: '#f5f5f5' }}>
                             <TableCell>头像</TableCell>
                             <TableCell>组织名称</TableCell>
+                            <TableCell>排序</TableCell>
                             <TableCell>描述</TableCell>
                             <TableCell>状态</TableCell>
                             <TableCell align="center">操作</TableCell>
@@ -187,7 +190,7 @@ export const OrganizationManagement = () => {
                     <TableBody>
                         {organizations.length === 0 ? (
                             <TableRow>
-                                <TableCell colSpan={5} align="center" sx={{ py: 4 }}>
+                                <TableCell colSpan={6} align="center" sx={{ py: 4 }}>
                                     <Typography color="text.secondary">
                                         暂无组织数据，点击"新建组织"开始创建
                                     </Typography>
@@ -208,6 +211,14 @@ export const OrganizationManagement = () => {
                                         <Typography variant="subtitle1" sx={{ fontWeight: 'medium' }}>
                                             {org.name}
                                         </Typography>
+                                    </TableCell>
+                                    <TableCell>
+                                        <Chip
+                                            label={org.sort || 0}
+                                            size="small"
+                                            variant="outlined"
+                                            sx={{ minWidth: 40 }}
+                                        />
                                     </TableCell>
                                     <TableCell>
                                         <Typography variant="body2" color="text.secondary">
@@ -280,6 +291,16 @@ export const OrganizationManagement = () => {
                             sx={{ mb: 3 }}
                             placeholder="请输入头像图片URL"
                             helperText="建议使用方形图片，支持相对路径"
+                        />
+                        <TextField
+                            label="排序序号"
+                            fullWidth
+                            type="number"
+                            value={formData.sort}
+                            onChange={(e) => setFormData({...formData, sort: parseInt(e.target.value) || 0})}
+                            sx={{ mb: 3 }}
+                            placeholder="请输入排序序号"
+                            helperText="数字越小排序越靠前，必须唯一"
                         />
                         <TextField
                             label="组织描述"
