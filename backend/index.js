@@ -11,10 +11,13 @@ import OrganizationDao from './organization/OrganizationDao.js';
 import AuthorDao from './author/AuthorDao.js';
 import ClipDao from './clip/ClipDao.js';
 import SubtitleDao from './subtitle/SubtitleDao.js'
+import VideoDao from './video/VideoDao.js';
 import OrganzationService from './organization/OrganizationService.js';
 import AuthorService from './author/AuthorService.js';
 import ClipService from './clip/ClipService.js';
 import SubtitleService from './subtitle/SubtitleService.js';
+import VideoService from './video/VideoService.js';
+import StatisticsService from './statistics/StatisticsService.js';
 import NotificationService from './notification/NotificationService.js';
 import UserDao from './user/UserDao.js';
 import UserService from './user/UserService.js';
@@ -41,11 +44,14 @@ app.context.userDao = new UserDao(db);
 app.context.authorDao = new AuthorDao(db);
 app.context.clipDao = new ClipDao(db);
 app.context.subtitleDao = new SubtitleDao(db);
+app.context.videoDao = new VideoDao(db);
 
 app.context.organizationService = new OrganzationService();
 app.context.authorService = new AuthorService();
 app.context.clipService = new ClipService();
 app.context.subtitleService = new SubtitleService();
+app.context.videoService = new VideoService();
+app.context.statisticsService = new StatisticsService();
 app.context.notificationService = new NotificationService();
 app.context.userService = new UserService();
 
@@ -157,6 +163,37 @@ router.get('/clips/:clipId/segment', async ctx => {
 });
 
 /**
+ * videos
+ */
+router.post('/videos', auth, async ctx => {
+    ctx.body = await ctx.videoService.insert(ctx);
+});
+router.put('/videos/:id', auth, async ctx => {
+    ctx.body = await ctx.videoService.update(ctx);
+});
+router.delete('/videos/:id', auth, async ctx => {
+    ctx.body = await ctx.videoService.deleteById(ctx);
+});
+router.get('/videos/:id', async ctx => {
+    ctx.body = await ctx.videoService.findById(ctx);
+});
+router.get('/videos', async ctx => {
+    ctx.body = await ctx.videoService.findAll(ctx);
+});
+router.get('/authors/:authorId/videos', async ctx => {
+    ctx.body = await ctx.videoService.findByAuthorId(ctx);
+});
+router.get('/organizations/:organizationId/videos', async ctx => {
+    ctx.body = await ctx.videoService.findByOrganizationId(ctx);
+});
+router.get('/videos/:id/clips', async ctx => {
+    ctx.body = await ctx.videoService.getClips(ctx);
+});
+router.post('/videos/:id/clips', auth, async ctx => {
+    ctx.body = await ctx.videoService.createClip(ctx);
+});
+
+/**
  * subtitles
  */
 router.post('/clips/:clipId/subtitles', auth, async ctx => {
@@ -173,6 +210,92 @@ router.get('/clips/:clipId/srt', async ctx => {
 });
 router.get('/clips/:clipId/subtitles/size', async ctx => {
     ctx.body = await ctx.subtitleService.findSizeByClipId(ctx);
+});
+
+/**
+ * statistics
+ */
+router.get('/statistics/overview', auth, async ctx => {
+    // 检查管理员权限
+    if (ctx.state.user.role !== 'admin') {
+        ctx.status = 403;
+        ctx.body = { success: false, message: '需要管理员权限' };
+        return;
+    }
+    ctx.body = await ctx.statisticsService.getOverviewStats();
+});
+router.get('/statistics/trends', auth, async ctx => {
+    if (ctx.state.user.role !== 'admin') {
+        ctx.status = 403;
+        ctx.body = { success: false, message: '需要管理员权限' };
+        return;
+    }
+    const days = ctx.request.query.days || 30;
+    ctx.body = await ctx.statisticsService.getTrends(parseInt(days));
+});
+router.get('/statistics/top-organizations', auth, async ctx => {
+    if (ctx.state.user.role !== 'admin') {
+        ctx.status = 403;
+        ctx.body = { success: false, message: '需要管理员权限' };
+        return;
+    }
+    const limit = ctx.request.query.limit || 5;
+    ctx.body = await ctx.statisticsService.getTopOrganizations(parseInt(limit));
+});
+router.get('/statistics/top-authors', auth, async ctx => {
+    if (ctx.state.user.role !== 'admin') {
+        ctx.status = 403;
+        ctx.body = { success: false, message: '需要管理员权限' };
+        return;
+    }
+    const limit = ctx.request.query.limit || 5;
+    ctx.body = await ctx.statisticsService.getTopAuthors(parseInt(limit));
+});
+router.get('/statistics/recent-activity', auth, async ctx => {
+    if (ctx.state.user.role !== 'admin') {
+        ctx.status = 403;
+        ctx.body = { success: false, message: '需要管理员权限' };
+        return;
+    }
+    const limit = ctx.request.query.limit || 10;
+    ctx.body = await ctx.statisticsService.getRecentActivity(parseInt(limit));
+});
+router.get('/statistics/clips-by-type', auth, async ctx => {
+    if (ctx.state.user.role !== 'admin') {
+        ctx.status = 403;
+        ctx.body = { success: false, message: '需要管理员权限' };
+        return;
+    }
+    ctx.body = await ctx.statisticsService.getClipsByType();
+});
+router.get('/statistics/subtitle-stats', auth, async ctx => {
+    if (ctx.state.user.role !== 'admin') {
+        ctx.status = 403;
+        ctx.body = { success: false, message: '需要管理员权限' };
+        return;
+    }
+    ctx.body = await ctx.statisticsService.getSubtitleStats();
+});
+router.get('/statistics/export', auth, async ctx => {
+    if (ctx.state.user.role !== 'admin') {
+        ctx.status = 403;
+        ctx.body = { success: false, message: '需要管理员权限' };
+        return;
+    }
+    const days = ctx.request.query.days || 30;
+    const format = ctx.request.query.format || 'json';
+    const result = await ctx.statisticsService.exportReport(parseInt(days), format);
+    
+    if (result.success && format === 'json') {
+        ctx.body = result.data;
+    } else if (result.success && format === 'csv') {
+        ctx.set('Content-Type', 'text/csv');
+        ctx.set('Content-Disposition', `attachment; filename=statistics-${days}days.csv`);
+        ctx.body = result.data;
+    } else {
+        ctx.status = 500;
+        ctx.body = result;
+    }
 });
 
 app.use(koaBody({ 

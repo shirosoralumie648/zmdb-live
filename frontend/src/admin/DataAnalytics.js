@@ -52,10 +52,7 @@ import {
     Star,
     AccessTime
 } from '@mui/icons-material';
-import OrganizationApi from '../api/OrganizationApi';
-import AuthorApi from '../api/AuthorApi';
-import ClipApi from '../api/ClipApi';
-import SubtitleApi from '../api/SubtitleApi';
+import StatisticsApi from '../api/StatisticsApi';
 
 export const DataAnalytics = () => {
     const navigate = useNavigate();
@@ -97,68 +94,47 @@ export const DataAnalytics = () => {
     const loadStatistics = async () => {
         setLoading(true);
         try {
-            // 加载基础统计数据
-            const [organizations, authors] = await Promise.all([
-                OrganizationApi.findAll(),
-                AuthorApi.findAll()
+            // 并行加载所有统计数据
+            const [overview, trends, topOrgs, topAuthors, activities, clipsByType, subtitleStats] = await Promise.all([
+                StatisticsApi.getOverviewStats(),
+                StatisticsApi.getTrends(parseInt(timeRange)),
+                StatisticsApi.getTopOrganizations(5),
+                StatisticsApi.getTopAuthors(5),
+                StatisticsApi.getRecentActivity(5),
+                StatisticsApi.getClipsByType(),
+                StatisticsApi.getSubtitleStats()
             ]);
 
-            // 模拟其他统计数据（实际应该从后端API获取）
-            const mockStatistics = {
-                overview: {
-                    totalOrganizations: organizations.length,
-                    totalAuthors: authors.length,
-                    totalClips: 156,
-                    totalSubtitles: 423,
-                    totalUsers: 12,
-                    storageUsed: 2.4 // GB
+            const realStatistics = {
+                overview: overview.data || {
+                    totalOrganizations: 0,
+                    totalAuthors: 0,
+                    totalClips: 0,
+                    totalSubtitles: 0,
+                    totalUsers: 0,
+                    storageUsed: 0
                 },
-                trends: {
-                    clipsGrowth: 15.2,
-                    subtitlesGrowth: 28.7,
-                    authorsGrowth: 8.3,
-                    organizationsGrowth: 5.1
+                trends: trends.data || {
+                    clipsGrowth: 0,
+                    subtitlesGrowth: 0,
+                    authorsGrowth: 0,
+                    organizationsGrowth: 0
                 },
-                topOrganizations: organizations.slice(0, 5).map((org, index) => ({
-                    ...org,
-                    clipCount: Math.floor(Math.random() * 50) + 10,
-                    subtitleCount: Math.floor(Math.random() * 100) + 20
-                })),
-                topAuthors: authors.slice(0, 5).map((author, index) => ({
-                    ...author,
-                    clipCount: Math.floor(Math.random() * 30) + 5,
-                    totalViews: Math.floor(Math.random() * 10000) + 1000,
-                    avgRating: (Math.random() * 2 + 3).toFixed(1)
-                })),
-                recentActivity: [
-                    { type: 'clip', action: '新增剪辑', title: '【技术分享】React最佳实践', time: '2小时前', author: 'Alice' },
-                    { type: 'subtitle', action: '上传字幕', title: '前端开发指南.srt', time: '4小时前', author: 'Bob' },
-                    { type: 'organization', action: '创建组织', title: '前端开发团队', time: '1天前', author: 'Charlie' },
-                    { type: 'author', action: '新增作者', title: 'David', time: '2天前', author: 'Admin' },
-                    { type: 'subtitle', action: '编辑字幕', title: 'JavaScript进阶.srt', time: '3天前', author: 'Eve' }
-                ],
-                clipsByType: [
-                    { type: '技术教程', count: 45, percentage: 28.8 },
-                    { type: '产品介绍', count: 38, percentage: 24.4 },
-                    { type: '会议记录', count: 32, percentage: 20.5 },
-                    { type: '培训视频', count: 25, percentage: 16.0 },
-                    { type: '其他', count: 16, percentage: 10.3 }
-                ],
-                subtitleStats: {
-                    avgLength: 156,
-                    totalDuration: 1247, // 分钟
-                    languageDistribution: [
-                        { language: '中文', count: 298, percentage: 70.4 },
-                        { language: '英文', count: 89, percentage: 21.0 },
-                        { language: '日文', count: 24, percentage: 5.7 },
-                        { language: '其他', count: 12, percentage: 2.9 }
-                    ]
+                topOrganizations: topOrgs.data || [],
+                topAuthors: topAuthors.data || [],
+                recentActivity: activities.data || [],
+                clipsByType: clipsByType.data || [],
+                subtitleStats: subtitleStats.data || {
+                    avgLength: 0,
+                    totalDuration: 0,
+                    languageDistribution: []
                 }
             };
 
-            setStatistics(mockStatistics);
+            setStatistics(realStatistics);
         } catch (err) {
-            setError('加载统计数据失败：' + (err.message || '未知错误'));
+            console.error('API调用失败:', err);
+            setError('加载统计数据失败：' + (err.message || '网络错误，请检查后端服务'));
         } finally {
             setLoading(false);
         }

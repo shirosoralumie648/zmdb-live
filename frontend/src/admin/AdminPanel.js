@@ -46,8 +46,15 @@ export const AdminPanel = () => {
             color: '#764ba2'
         },
         {
+            title: '视频管理',
+            description: '管理完整视频文件和可视化剪辑',
+            icon: <VideoLibrary sx={{ fontSize: '3rem', color: '#ff6b6b' }} />,
+            path: '/admin/videos',
+            color: '#ff6b6b'
+        },
+        {
             title: '剪辑管理',
-            description: '管理视频剪辑和相关操作',
+            description: '管理视频剪辑片段和相关操作',
             icon: <VideoLibrary sx={{ fontSize: '3rem', color: '#f093fb' }} />,
             path: '/admin/clips',
             color: '#f093fb'

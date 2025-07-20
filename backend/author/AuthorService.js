@@ -17,9 +17,15 @@ export default class AuthorService {
         const entity = ctx.request.body;
         let author = {};
         // 检查参数合法性
+        if (!entity) {
+            throw { code: 400, message: '请求参数缺失' };
+        }
         const organizationId = entity.organizationId;
-        //鉴权
-        if (ctx.state.auth.organizationId !== 0 && ctx.state.auth.organizationId !== organizationId) {
+        if (!organizationId) {
+            throw { code: 400, message: '组织ID不能为空' };
+        }
+        //鉴权 - 管理员可以操作所有组织
+        if (ctx.state.user.role !== 'admin') {
             throw error.auth.Unauthorized;
         }
         if (!ctx.organizationDao.findById(organizationId)) {
